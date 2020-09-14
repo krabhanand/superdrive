@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage.controllers;
 
+import com.udacity.jwdnd.course1.cloudstorage.models.Note;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,10 @@ public class HomeController {
     {
         String username= SecurityContextHolder.getContext().getAuthentication().getName();
         int userId=userService.getUser(username).getUserId();
-        if(noteService.getNotes(userId).size()>0)
-        System.out.println(noteService.getNotes(userId).get(0).getNoteTitle()+":  "+noteService.getNotes(userId).get(0).getNoteDescription());
+        if(noteService.getNotes(userId).size()>0) {
+            for(Note note: noteService.getNotes(userId))
+            System.out.println(note.noteId + ":  " + note.getNoteTitle() + ":  " + note.getNoteDescription());
+        }
         model.addAttribute("notes",noteService.getNotes(userId));
         return "home";
     }

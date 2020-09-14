@@ -22,4 +22,8 @@ public class NoteService {
 
         return noteMapper.getNotes(userId);
     }
+
+    public void updateNote(Note note) {
+
+    }
 }

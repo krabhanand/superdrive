@@ -26,13 +26,15 @@ public class ResultController {
     }
 
     @PostMapping("/notes")
-    public String postNotesResult(@ModelAttribute Note note, Model model)
+    public String postNotesResult(@ModelAttribute(value="note") Note note, Model model)
     {
         String username= SecurityContextHolder.getContext().getAuthentication().getName();
         int userId=userService.getUser(username).getUserId();
         note.setUserId(userId);
-        System.out.println("Inside Result Controller:     userId"+note.getUserId()+"    noteTitle: "+note.getNoteTitle()+"    noteDescription: "+note.getNoteDescription());
-        noteService.addNote(note);
+        noteService.addNote(new Note(null,note.getNoteTitle(),note.getNoteDescription(),note.getUserId()));
+        System.out.println("Inside Result Controller:   noteId:"+note.noteId);
+        //System.out.println("Inside Result Controller:     userId"+note.getUserId()+"    noteTitle: "+note.getNoteTitle()+"    noteDescription: "+note.getNoteDescription());
+        //else noteService.updateNote(note);
         return "result";
     }
 
