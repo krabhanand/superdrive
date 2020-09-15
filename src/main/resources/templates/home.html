@@ -98,8 +98,8 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" th:action="@{/result/notes}" th:object="${note}" method="POST" >
-                                            <input type="hidden" name="noteId" id="note-id"  th:feild="noteId">
+                                        <form action="#" th:action="@{/result/notes/{noteId}(noteId=${note.noteId})}" th:object="${note}" method="POST" >
+                                            <input type="hidden" name="noteId" id="note-id" th:feild="${noteId}">
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">Title</label>
                                                 <input type="text" name= "noteTitle" th:feild="${noteTitle}" class="form-control" id="note-title" maxlength="20" required>

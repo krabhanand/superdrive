@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -25,14 +26,15 @@ public class ResultController {
         return "result";
     }
 
-    @PostMapping("/notes")
-    public String postNotesResult(@ModelAttribute(value="note") Note note, Model model)
+    @PostMapping("/notes/{noteId}")
+    public String postNotesResult(@ModelAttribute(value="note") Note note, Model model, @PathVariable("noteId")int noteId)
     {
         String username= SecurityContextHolder.getContext().getAuthentication().getName();
         int userId=userService.getUser(username).getUserId();
         note.setUserId(userId);
         noteService.addNote(new Note(null,note.getNoteTitle(),note.getNoteDescription(),note.getUserId()));
         System.out.println("Inside Result Controller:   noteId:"+note.noteId);
+        System.out.println("path variable noteid"+noteId);
         //System.out.println("Inside Result Controller:     userId"+note.getUserId()+"    noteTitle: "+note.getNoteTitle()+"    noteDescription: "+note.getNoteDescription());
         //else noteService.updateNote(note);
         return "result";
@@ -43,5 +45,6 @@ public class ResultController {
     {
         return "result";
     }
+
 
 }
