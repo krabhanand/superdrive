@@ -1,6 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage.controllers;
 
 import com.udacity.jwdnd.course1.cloudstorage.models.Note;
+import com.udacity.jwdnd.course1.cloudstorage.models.NoteReciever;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,16 +27,27 @@ public class ResultController {
         return "result";
     }
 
-    @PostMapping("/notes/{noteId}")
-    public String postNotesResult(@ModelAttribute(value="note") Note note, Model model, @PathVariable("noteId")int noteId)
+    @PostMapping("/notes")
+    public String postNotesResult(@ModelAttribute(value="cnote") NoteReciever note, Model model)
     {
+
         String username= SecurityContextHolder.getContext().getAuthentication().getName();
         int userId=userService.getUser(username).getUserId();
         note.setUserId(userId);
+        int noteId=note.getNoteId();
+        if(noteId==0)
         noteService.addNote(new Note(null,note.getNoteTitle(),note.getNoteDescription(),note.getUserId()));
-        System.out.println("Inside Result Controller:   noteId:"+note.noteId);
-        System.out.println("path variable noteid"+noteId);
-        //System.out.println("Inside Result Controller:     userId"+note.getUserId()+"    noteTitle: "+note.getNoteTitle()+"    noteDescription: "+note.getNoteDescription());
+        else {
+            Note temp=new Note();
+            temp.noteId=noteId;
+            temp.setUserId(userId);
+            temp.setNoteDescription(note.getNoteDescription());
+            temp.setNoteTitle(note.getNoteTitle());
+            noteService.updateNote(temp);
+        }
+        System.out.println("Inside Result Controller:   noteId:"+note.getNoteId());
+        //System.out.println("path variable noteid"+note.noteId);
+        System.out.println("Inside Result Controller:     userId"+note.getUserId()+"    noteTitle: "+note.getNoteTitle()+"    noteDescription: "+note.getNoteDescription());
         //else noteService.updateNote(note);
         return "result";
     }

@@ -24,6 +24,6 @@ public class NoteService {
     }
 
     public void updateNote(Note note) {
-
+        noteMapper.update(note);
     }
 }

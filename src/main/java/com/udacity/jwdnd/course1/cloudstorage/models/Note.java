@@ -13,6 +13,10 @@ public class Note {
         this.userId=userId;
     }
 
+    public Note() {
+
+    }
+
     public Integer getUserId() {
         return userId;
     }

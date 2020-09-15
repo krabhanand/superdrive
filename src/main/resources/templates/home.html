@@ -98,15 +98,15 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" th:action="@{/result/notes/{noteId}(noteId=${note.noteId})}" th:object="${note}" method="POST" >
-                                            <input type="hidden" name="noteId" id="note-id" th:feild="${noteId}">
+                                        <form action="#" th:action="@{/result/notes/}" th:object="${cnote}" method="POST" >
+                                            <input type="hidden" name="noteId" id="note-id" th:field="*{noteId}" th:value="${noteId}">
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">Title</label>
-                                                <input type="text" name= "noteTitle" th:feild="${noteTitle}" class="form-control" id="note-title" maxlength="20" required>
+                                                <input type="text" name= "noteTitle" th:field="*{noteTitle}" class="form-control" id="note-title" maxlength="20" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="note-description" class="col-form-label">Description</label>
-                                                <textarea class="form-control" name="noteDescription" th:feild="${noteDescription}" id="note-description" rows="5"  maxlength="1000" required></textarea>
+                                                <textarea class="form-control" name="noteDescription" th:field="*{noteDescription}" id="note-description" rows="5"  maxlength="1000" required></textarea>
                                             </div>
                                             <button id="noteSubmit" type="submit" class="d-none"></button>
                                         </form>
@@ -208,6 +208,14 @@
                 $('#credential-username').val(username ? username : '');
                 $('#credential-password').val(password ? password : '');
                 $('#credentialModal').modal('show');
+            }
+
+            function editNoteModel(note)
+            {
+                $('#editNote-id').val(note.noteId ? note.noteId : '');
+                $('#editNote-title').val(note.notetitle ? note.notetitle : '');
+                $('#editNote-description').val(note.noteDescription ? note.noteDescription : ' ');
+                $('#noteModal').modal('show');
             }
         </script>
     </body>
