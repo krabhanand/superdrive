@@ -26,4 +26,15 @@ public class NoteService {
     public void updateNote(Note note) {
         noteMapper.update(note);
     }
+
+    public boolean searchNote(Integer noteId)
+    {
+        return noteMapper.getNote(noteId)!=null;
+    }
+
+    public void deleteNote(Integer noteId)
+
+    {
+        noteMapper.delete(noteId);
+    }
 }

@@ -28,20 +28,20 @@ public class HomeController {
         String username= SecurityContextHolder.getContext().getAuthentication().getName();
         int userId=userService.getUser(username).getUserId();
         if(noteService.getNotes(userId).size()>0) {
-            for(Note note: noteService.getNotes(userId))
-            System.out.println(note.noteId + ":  " + note.getNoteTitle() + ":  " + note.getNoteDescription());
+            //for(Note note: noteService.getNotes(userId))
+            //System.out.println(note.noteId + ":  " + note.getNoteTitle() + ":  " + note.getNoteDescription());
             model.addAttribute("notes",noteService.getNotes(userId));
-            model.addAttribute("cnote",new NoteReciever());
+            //model.addAttribute("cnote",new Note());
 
         }
         else
         {
-            Note temp=new Note(null,"Sample Title","Sample Description",userId);
-            temp.noteId=0;
-            List<Note> nsl=new ArrayList<Note>();
-            nsl.add(temp);
-            model.addAttribute("notes",nsl);
-            model.addAttribute("cnote",new NoteReciever());
+            //Note temp=new Note(null,"Sample Title","Sample Description",userId);
+            //temp.noteId=0;
+            //List<Note> nsl=new ArrayList<Note>();
+            //nsl.add(temp);
+            //model.addAttribute("notes",nsl);
+            //model.addAttribute("cnote",new Note());
         }
         return "home";
     }

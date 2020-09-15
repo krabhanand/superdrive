@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/result")
 @Controller
@@ -28,7 +25,7 @@ public class ResultController {
     }
 
     @PostMapping("/notes")
-    public String postNotesResult(@ModelAttribute(value="cnote") NoteReciever note, Model model)
+    public String postNotesResult(@ModelAttribute(value="cnote") Note note, Model model)
     {
 
         String username= SecurityContextHolder.getContext().getAuthentication().getName();
@@ -38,17 +35,19 @@ public class ResultController {
         if(noteId==0)
         noteService.addNote(new Note(null,note.getNoteTitle(),note.getNoteDescription(),note.getUserId()));
         else {
-            Note temp=new Note();
-            temp.noteId=noteId;
-            temp.setUserId(userId);
-            temp.setNoteDescription(note.getNoteDescription());
-            temp.setNoteTitle(note.getNoteTitle());
-            noteService.updateNote(temp);
+
+            noteService.updateNote(note);
         }
-        System.out.println("Inside Result Controller:   noteId:"+note.getNoteId());
-        //System.out.println("path variable noteid"+note.noteId);
-        System.out.println("Inside Result Controller:     userId"+note.getUserId()+"    noteTitle: "+note.getNoteTitle()+"    noteDescription: "+note.getNoteDescription());
-        //else noteService.updateNote(note);
+
+        return "result";
+    }
+
+    @GetMapping("notes/delete")
+    public String deleteNote(@RequestParam("noteId") Integer noteId)
+    {
+        //System.out.println(noteId);
+        if(noteService.searchNote(noteId))
+            noteService.deleteNote(noteId);
         return "result";
     }
 
