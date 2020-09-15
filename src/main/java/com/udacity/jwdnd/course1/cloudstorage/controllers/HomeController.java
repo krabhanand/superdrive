@@ -1,7 +1,9 @@
 package com.udacity.jwdnd.course1.cloudstorage.controllers;
 
+import com.udacity.jwdnd.course1.cloudstorage.models.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.models.Note;
 import com.udacity.jwdnd.course1.cloudstorage.models.NoteReciever;
+import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,8 @@ public class HomeController {
     private NoteService noteService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private CredentialService credentialService;
 
     @RequestMapping("/home")
     public String getHome(Model model)
@@ -28,20 +32,14 @@ public class HomeController {
         String username= SecurityContextHolder.getContext().getAuthentication().getName();
         int userId=userService.getUser(username).getUserId();
         if(noteService.getNotes(userId).size()>0) {
-            //for(Note note: noteService.getNotes(userId))
-            //System.out.println(note.noteId + ":  " + note.getNoteTitle() + ":  " + note.getNoteDescription());
             model.addAttribute("notes",noteService.getNotes(userId));
-            //model.addAttribute("cnote",new Note());
-
         }
-        else
+        if(credentialService.getCredentials(userId).size()>0)
         {
-            //Note temp=new Note(null,"Sample Title","Sample Description",userId);
-            //temp.noteId=0;
-            //List<Note> nsl=new ArrayList<Note>();
-            //nsl.add(temp);
-            //model.addAttribute("notes",nsl);
-            //model.addAttribute("cnote",new Note());
+            List<Credential> lc=credentialService.getCredentials(userId);
+            for(Credential credential: lc)
+                System.out.println(credential.getCredentialId()+" "+credential.getUrl()+"  "+credential.getUsername()+"  "+credential.getPassword());
+            model.addAttribute("credentials",lc);
         }
         return "home";
     }
