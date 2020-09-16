@@ -4,6 +4,7 @@ import com.udacity.jwdnd.course1.cloudstorage.models.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.models.Note;
 import com.udacity.jwdnd.course1.cloudstorage.models.NoteReciever;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
+import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ public class HomeController {
     private UserService userService;
     @Autowired
     private CredentialService credentialService;
+    @Autowired
+    private FileService fileService;
 
     @RequestMapping("/home")
     public String getHome(Model model)
@@ -40,6 +43,10 @@ public class HomeController {
             for(Credential credential: lc)
                 System.out.println(credential.getCredentialId()+" "+credential.getUrl()+"  "+credential.getUsername()+"  "+credential.getPassword());
             model.addAttribute("credentials",lc);
+        }
+        if(fileService.getFilesCount(userId)>0)
+        {
+            model.addAttribute("files",fileService.getFileList(userId));
         }
         return "home";
     }
