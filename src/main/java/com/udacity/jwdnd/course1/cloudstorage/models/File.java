@@ -8,11 +8,11 @@ public class File {
     private String contentType;
     private String fileSize;
     private Integer userId;
-    private byte[] file;
+    private byte[] filedata;
 
-    public File(Integer fileId,String fileName,String contentType, String fileSize,Integer userId,byte[] file) {
+    public File(Integer fileId,String fileName,String contentType, String fileSize,Integer userId,byte[] filedata) {
         this.fileId = fileId;
-        this.file = file;
+        this.filedata = filedata;
         this.userId = userId;
         this.fileName=fileName;
         this.contentType=contentType;
@@ -56,11 +56,11 @@ public class File {
     }
 
     public byte[] getFile() {
-        return file;
+        return filedata;
     }
 
-    public void setFile(byte[] file) {
-        this.file = file;
+    public void setFile(byte[] filedata) {
+        this.filedata = filedata;
     }
 
     public Integer getUserId() {

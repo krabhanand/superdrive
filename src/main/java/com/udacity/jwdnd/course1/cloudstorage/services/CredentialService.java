@@ -4,10 +4,12 @@ import com.udacity.jwdnd.course1.cloudstorage.mappers.CredentialMapper;
 import com.udacity.jwdnd.course1.cloudstorage.mappers.NoteMapper;
 import com.udacity.jwdnd.course1.cloudstorage.models.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.models.Note;
+import com.udacity.jwdnd.course1.cloudstorage.models.SendCredential;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
@@ -16,6 +18,8 @@ public class CredentialService {
     private CredentialMapper credentialMapper;
     @Autowired
     private EncryptionService encryptionService;
+    @Autowired
+    private UserService userService;
 
     public CredentialService(CredentialMapper credentialMapper) {
         this.credentialMapper = credentialMapper;
@@ -34,17 +38,18 @@ public class CredentialService {
         return credentialMapper.insert(credential);
     }
 
-    public List<Credential> getCredentials(Integer userId){
+    public List<SendCredential> getCredentials(Integer userId){
 
         List<Credential> lc=credentialMapper.getCredentials(userId);
-
+        List<SendCredential> slc=new ArrayList<SendCredential>();
         for(Credential credential: lc)
         {
             String decryptedPassword=encryptionService.decryptValue(credential.getPassword(),credential.getKey());
             credential.setKey(null);
+            slc.add(new SendCredential(credential.credentialId,credential.getUrl(),credential.getUsername(),credential.getPassword(),decryptedPassword,credential.getUserId()));
             credential.setPassword(decryptedPassword);
         }
-        return lc;
+        return slc;
     }
 
     public void updateCredential(Credential credential) {
@@ -68,6 +73,11 @@ public class CredentialService {
 
     {
         credentialMapper.delete(credentialId);
+    }
+
+    public String getUserforCredential(Integer credentialId) {
+        Integer userId=credentialMapper.getUserIdForCredential(credentialId);
+        return userService.getUsernameForId(userId);
     }
 }
 

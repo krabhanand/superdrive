@@ -24,4 +24,7 @@ public interface NoteMapper {
 
     @Select("SELECT * FROM NOTES WHERE noteid=#{noteId}")
     Note getNote(Integer noteId);
+
+    @Select("SELECT userid FROM NOTES WHERE noteid=#{noteId}")
+    public Integer getUserIdFromNote(Integer noteId);
 }

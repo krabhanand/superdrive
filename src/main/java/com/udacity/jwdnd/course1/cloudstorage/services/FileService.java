@@ -15,4 +15,8 @@ public interface FileService {
     public int getFilesCount(Integer userId);
     public List<FileData> getFileList(Integer userId);
     File getFile(Integer fileId);
+    void delete(Integer fileId);
+
+    boolean checkForDuplicacy(String cleanPath, Integer userId);
+    String getUserForFile(Integer fileId);
 }

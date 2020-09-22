@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.print.attribute.Attribute;
+
 @RequestMapping("/signup")
 @Controller
 public class SignupController {
@@ -17,8 +19,9 @@ public class SignupController {
     @Autowired
     private UserService userService;
     @GetMapping()
-    public String getSignUpPage()
+    public String getSignUpPage(Model model)
     {
+
         return "signup";
     }
 
@@ -26,10 +29,9 @@ public class SignupController {
     public String doSignUp(@ModelAttribute User user, Model model)
     {
         String signupError = null;
-
-        System.out.println(user.getUsername());
         if (!userService.isUsernameAvailable(user.getUsername())) {
             signupError = "The username already exists.";
+
         }
 
         if (signupError == null) {
@@ -41,10 +43,13 @@ public class SignupController {
 
         if (signupError == null) {
             model.addAttribute("signupSuccess", true);
+            //System.out.println("signup successful");
+            return "redirectlogin";
         } else {
             model.addAttribute("signupError", signupError);
         }
 
         return "signup";
     }
+
 }

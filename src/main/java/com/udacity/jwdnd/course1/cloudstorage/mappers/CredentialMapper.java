@@ -25,4 +25,7 @@ public interface CredentialMapper {
 
     @Select("SELECT * FROM CREDENTIALS WHERE credentialid=#{credentialId}")
     Credential getCredential(Integer credentialId);
+
+    @Select("SELECT userid FROM CREDENTIALS WHERE credentialid=#{credentialId}")
+    public Integer getUserIdForCredential(Integer credentialId);
 }

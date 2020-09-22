@@ -10,18 +10,78 @@
     </head>
     <body class="p-3 mb-2 bg-light text-black">
         <div class="container justify-content-center w-50 p-3" style="margin-top: 5em;">
-            <div class="alert alert-success fill-parent">
+            <div th:if="${success}" class="alert alert-success fill-parent">
                 <h1 class="display-5">Success</h1>
-                <span>Your changes were successfully saved. Click <a>here</a> to continue.</span>
+                <span>Your changes were successfully saved. Click <a th:href="@{/home}" id="linkSuccess">here</a> to continue.</span>
             </div>
-            <div class="alert alert-danger fill-parent">
+            <div th:if="${fail}" class="alert alert-danger fill-parent">
                 <h1 class="display-5">Error</h1>
-                <span>Your changes were not saved. Click <a>here</a> to continue.</span>
+                <span>Your changes were not saved. Click <a th:href="@{/home}" id="linkFail">here</a> to continue.</span>
             </div>
-            <div class="alert alert-danger fill-parent">
-                <h1 class="display-5">Error</h1>
-                <span>Example Error Message</span>
-                <span>Click <a>here</a> to continue.</span>
+<!-- file deletion specifics -->
+            <div th:if="${fileduplicatefail}" class="alert alert-danger fill-parent">
+                <h1 class="display-5">Duplicacy Error!</h1>
+                <span>Your upload was not saved. A file already exists with that name.</span>
+                <span>Click <a th:href="@{/home}">here</a> to continue.</span>
+            </div>
+            <div th:if="${filedeletefail}" class="alert alert-danger fill-parent">
+                <h1 class="display-5">File Not Found Error!</h1>
+                <span>The file you wanted to delete was not found or You do not have permissions to delete them</span>
+                <span>Click <a th:href="@{/home}">here</a> to continue.</span>
+            </div>
+            <div th:if="${emptyfileerror}" class="alert alert-danger fill-parent">
+                <h1 class="display-5">Empty File Upload Error!</h1>
+                <span>You cannot upload an empty file.</span>
+                <span>Click <a th:href="@{/home}">here</a> to continue.</span>
+            </div>
+            <div th:if="${filenotfound}" class="alert alert-danger fill-parent">
+                <h1 class="display-5">File Not Found Error!</h1>
+                <span>The file you are looking for was either not found or You do not have permissions to view them</span>
+                <span>Click <a th:href="@{/home}">here</a> to continue.</span>
+            </div>
+            <div th:if="${fileuploadsuccess}" class="alert alert-success fill-parent">
+            <h1 class="display-5">File Upload Success</h1>
+            <span>Your file was successfully uploaded. Click <a th:href="@{/home}" id="linkFileUploadSuccess">here</a> to continue.</span>
+        </div>
+            <div th:if="${filedeletesuccess}" class="alert alert-success fill-parent">
+                <h1 class="display-5">File Delete Success</h1>
+                <span>Your file was successfully deleted. Click <a th:href="@{/home}" id="filedeletesuccess">here</a> to continue.</span>
+            </div>
+<!--            notes related stuff-->
+            <div th:if="${notesavesuccess}" class="alert alert-success fill-parent">
+                <h1 class="display-5">Note Creation Success</h1>
+                <span>Your note was successfully saved. Click <a th:href="@{/home}" >here</a> to continue.</span>
+            </div>
+            <div th:if="${noteeditsuccess}" class="alert alert-success fill-parent">
+                <h1 class="display-5">Note Edit Success</h1>
+                <span>The changes in your note were successfully saved. Click <a th:href="@{/home}" >here</a> to continue.</span>
+            </div>
+            <div th:if="${notedeletesuccess}" class="alert alert-success fill-parent">
+                <h1 class="display-5">Note Delete Success</h1>
+                <span>Your note was successfully deleted. Click <a th:href="@{/home}" >here</a> to continue.</span>
+            </div>
+            <div th:if="${notedeletefail}" class="alert alert-danger fill-parent">
+                <h1 class="display-5">Note Not Found Error!</h1>
+                <span>The note you wanted to delete was not found or You do not have permissions to delete them</span>
+                <span>Click <a th:href="@{/home}">here</a> to continue.</span>
+            </div>
+            <!--            credentials related stuff-->
+            <div th:if="${credentialsavesuccess}" class="alert alert-success fill-parent">
+                <h1 class="display-5">Credential Input Success</h1>
+                <span>Your credential was successfully saved. Click <a th:href="@{/home}" >here</a> to continue.</span>
+            </div>
+            <div th:if="${credentialupdatessuccess}" class="alert alert-success fill-parent">
+                <h1 class="display-5">Credential Update Success</h1>
+                <span>The changes in your credential were successfully saved. Click <a th:href="@{/home}" >here</a> to continue.</span>
+            </div>
+            <div th:if="${credentialdeletesuccess}" class="alert alert-success fill-parent">
+                <h1 class="display-5">Credential Delete Success</h1>
+                <span>Your credential was successfully deleted. Click <a th:href="@{/home}" >here</a> to continue.</span>
+            </div>
+            <div th:if="${credentialdeletefail}" class="alert alert-danger fill-parent">
+                <h1 class="display-5">Credential Not Found Error!</h1>
+                <span>The credential you wanted to delete was not found or You do not have permissions to delete them</span>
+                <span>Click <a th:href="@{/home}">here</a> to continue.</span>
             </div>
         </div>
     </body>

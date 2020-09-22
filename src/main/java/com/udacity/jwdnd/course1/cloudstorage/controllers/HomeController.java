@@ -3,6 +3,7 @@ package com.udacity.jwdnd.course1.cloudstorage.controllers;
 import com.udacity.jwdnd.course1.cloudstorage.models.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.models.Note;
 import com.udacity.jwdnd.course1.cloudstorage.models.NoteReciever;
+import com.udacity.jwdnd.course1.cloudstorage.models.SendCredential;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
@@ -39,10 +40,8 @@ public class HomeController {
         }
         if(credentialService.getCredentials(userId).size()>0)
         {
-            List<Credential> lc=credentialService.getCredentials(userId);
-            for(Credential credential: lc)
-                System.out.println(credential.getCredentialId()+" "+credential.getUrl()+"  "+credential.getUsername()+"  "+credential.getPassword());
-            model.addAttribute("credentials",lc);
+            List<SendCredential> lc=credentialService.getCredentials(userId);
+               model.addAttribute("credentials",lc);
         }
         if(fileService.getFilesCount(userId)>0)
         {

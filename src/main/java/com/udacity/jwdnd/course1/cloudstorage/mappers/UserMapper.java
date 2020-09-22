@@ -13,6 +13,8 @@ public interface UserMapper {
     @Options(useGeneratedKeys = true, keyProperty = "userId")
     int insert(User user);
 
-    @Delete("DELETE FROM USERS WHERE username = #{username}")
-    void delete(String username);
+
+
+    @Select("SELECT username from USERS WHERE userId=#{userId}")
+    public String getUsernameForId(Integer userID);
 }

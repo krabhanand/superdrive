@@ -22,7 +22,7 @@ public class UserService {
 
 
     public boolean isUsernameAvailable(String username) {
-        System.out.println("Inside User Service: username excisting"+userMapper.getUser(username));
+       // System.out.println("Inside User Service: username excisting"+userMapper.getUser(username));
         return userMapper.getUser(username) == null;
     }
 
@@ -38,5 +38,10 @@ public class UserService {
     public User getUser(String username)
     {
         return userMapper.getUser(username);
+    }
+
+    public String getUsernameForId(Integer userId)
+    {
+        return userMapper.getUsernameForId(userId);
     }
 }

@@ -6,12 +6,14 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CloudStorageApplicationTests {
 
 	@LocalServerPort
 	private int port;
+
 
 	private WebDriver driver;
 	private TestHelper testHelper;
@@ -66,14 +68,12 @@ class CloudStorageApplicationTests {
 		String username="machli";
 		String password="kinare";
 		testHelper.signup(firstName,lastName,username,password);
-		Thread.sleep(3000);
-		Assertions.assertTrue(testHelper.verifySignup());
+		Thread.sleep(5000);
+		Assertions.assertEquals("Login", driver.getTitle());
 
 		// if sign up is verified, proceed to login
-		if(testHelper.verifySignup())
+		if(driver.getTitle().equals("Login"))
 		{
-			testHelper.goToLoginPAge();
-			Thread.sleep(1200);
 			testHelper.fillLoginCredentials(username,password);
 			Thread.sleep(1200);
 			testHelper.attemptLogin();
@@ -84,6 +84,7 @@ class CloudStorageApplicationTests {
 
 			//do logout
 			testHelper.logout();
+			Thread.sleep(2000);
 			// ensure that home is not accessible
 			driver.get("http://localhost:" + this.port + "/home");
 			Assertions.assertNotEquals("Home",driver.getTitle());
@@ -108,14 +109,14 @@ class CloudStorageApplicationTests {
 	//fail to sign up
 	@Test
 	public void attemptFailedSipnUp() throws InterruptedException {
-		driver.get("http://localhost:\" + this.port + \"/signup");
+		driver.get("http://localhost:" + this.port + "/signup");
 		String firstName="Tarang";
 		String lastName="Talab";
 		String username="machli";
 		String password="kinare";
 		testHelper.signup(firstName,lastName,username,password);
-		Thread.sleep(3000);
-		Assertions.assertFalse(testHelper.verifySignup());
+		Thread.sleep(4000);
+		Assertions.assertNotEquals("Login", driver.getTitle());
 	}
 
 
@@ -133,17 +134,173 @@ class CloudStorageApplicationTests {
 		testHelper.attemptLogin();
 		Thread.sleep(1200);
 
-		String noteHeadindg="sjis ehjfj df jdfsiujkd 13jJIJDS  jjd JD j d";
-		String noteContents=" shjdasjk kK JSD hd ajs jJHahA hgaghkhs JJHhjs sjhAJ aj HHJj HSAjh AHJS JJHjsdj JJJ jsa    DSJLKHJDS SD KJDFKJjsjd dfksf dfvjodfklflk fkl;klfd fg fd";
+		String noteHeadindg="sjis ehjfj df jd";
+		String noteContents="shjdasjk kK JSD hd ajs jJHahA hgaghkhs JJHhjs sjhAJ aj HHJj HSAjh AHJS JJHjsdj JJJ jsa    DSJLKHJDS SD KJDFKJjsjd dfksf dfvjodfklflk fkl;klfd fg fd";
 		//add a new note
+		//System.out.println("login has been done, now note will be added.");
 		testHelper.addNewNote(noteHeadindg,noteContents);
-
+		Thread.sleep(3000);
+		driver.get("http://localhost:" + this.port + "/home");
+		Thread.sleep(2000);
+		testHelper.viewNotes();
+		Thread.sleep(2000);
 		//verify that note is displayed
-		boolean isNoteAvailable=testHelper.verifyNote();
+		boolean isNoteAvailable=testHelper.verifyNote(noteHeadindg,noteContents);
 		Assertions.assertTrue(isNoteAvailable);
 	}
 
+	@Test
+	public void noteEditTest () throws InterruptedException {
+		Thread.sleep(3000);
+		driver.get("http://localhost:" + this.port + "/login");
+		String username="machli";
+		String password="kinare";
 
-	//
+		testHelper.fillLoginCredentials(username,password);
+		Thread.sleep(1200);
+		testHelper.attemptLogin();
+		Thread.sleep(1200);
+		String noteHeadindg="sjis ehjfj df jd";
+		String noteNewContents="shhjdsj skjjdkkdsjjf fjkdsjkf gaghkhs JJHhjs sjhAJ aj HHJj HSAjh AHJS JJHjsdj JJJ jsa    DSJLKHJDS SD KJDFKJjsjd dfksf dfvjodfklflk fkl;klfd fg fd";
+		testHelper.editNote(noteHeadindg,noteNewContents);
+		Thread.sleep(2000);
+		driver.get("http://localhost:" + this.port + "/home");
+		Thread.sleep(2000);
+		testHelper.viewNotes();
+		Thread.sleep(2000);
+		//verify that note is displayed
+		boolean isNoteAvailable=testHelper.verifyNote(noteHeadindg,noteNewContents);
+		Assertions.assertTrue(isNoteAvailable);
+	}
+
+	@Test
+	public void noteDeleteTest () throws InterruptedException {
+		Thread.sleep(3000);
+		driver.get("http://localhost:" + this.port + "/signup");
+		String username = "machlia";
+		String password = "kinarea";
+		String firstName="Tarang";
+		String lastName="Talab";
+		testHelper.signup(firstName,lastName,username,password);
+		Thread.sleep(6000);
+		Thread.sleep(1200);
+		testHelper.fillLoginCredentials(username, password);
+		Thread.sleep(1200);
+		testHelper.attemptLogin();
+		Thread.sleep(1200);
+		//System.out.println("Login done in note delete");
+
+		String noteHeadindg = "sjis ehjfj df jd";
+		String noteNewContents = "shhjdsj skjjdkkdsjjf fjkdsjkf gaghkhs JJHhjs sjhAJ aj HHJj HSAjh AHJS JJHjsdj JJJ jsa    DSJLKHJDS SD KJDFKJjsjd dfksf dfvjodfklflk fkl;klfd fg fd";
+		testHelper.addNewNote(noteHeadindg,noteNewContents);
+		Thread.sleep(3000);
+		driver.get("http://localhost:" + this.port + "/home");
+		testHelper.deleteNote();
+		Thread.sleep(2000);
+		driver.get("http://localhost:" + this.port + "/home");
+		Thread.sleep(2000);
+		testHelper.viewNotes();
+		Thread.sleep(2000);
+		//verify that note is displayed
+		boolean isNoteAvailable=testHelper.verifyNote(noteHeadindg,noteNewContents);
+		Assertions.assertFalse(isNoteAvailable);
+
+	}
+
+	@Test
+	public void saveCredentialsTest() throws InterruptedException
+	{
+		driver.get("http://localhost:" + this.port + "/signup");
+		String username = "machlie";
+		String password = "kinaree";
+		String firstName="Tarang";
+		String lastName="Talab";
+		testHelper.signup(firstName,lastName,username,password);
+		Thread.sleep(6000);
+		Thread.sleep(1200);
+		testHelper.fillLoginCredentials(username, password);
+		Thread.sleep(1200);
+		testHelper.attemptLogin();
+		Thread.sleep(1200);
+		String URL="https://www.needofhour.com";
+		String credentialUsername="xxxxx@needofhour.com";
+		String credentialPassword="yyyyyyyyyy";
+		testHelper.addNewCredential(URL,credentialUsername,credentialPassword);
+		driver.get("http://localhost:" + this.port + "/home");
+		Thread.sleep(2000);
+		testHelper.viewCredentials();
+		Thread.sleep(2000);
+		//verify that credential is displayed
+		boolean isCredentialAvailable=testHelper.verifyCredentials(driver,URL,credentialUsername,credentialPassword);
+		Assertions.assertTrue(isCredentialAvailable);
+	}
+		//
+	@Test
+	public void editCredentials() throws InterruptedException
+	{
+
+		driver.get("http://localhost:" + this.port + "/signup");
+		String username = "machliou";
+		String password = "kinareou";
+		String firstName="Tarang";
+		String lastName="Talabon";
+		testHelper.signup(firstName,lastName,username,password);
+		Thread.sleep(6000);
+		Thread.sleep(1200);
+		testHelper.fillLoginCredentials(username, password);
+		Thread.sleep(1200);
+		testHelper.attemptLogin();
+		Thread.sleep(1200);
+		String URL="https://www.needofhour.com";
+		String credentialUsername="xxxxx@needofhour.com";
+		String credentialPassword="yyyyyyyyyy";
+		testHelper.addNewCredential(URL,credentialUsername,credentialPassword);
+		driver.get("http://localhost:" + this.port + "/home");
+		Thread.sleep(2000);
+		testHelper.viewCredentials();
+		Thread.sleep(2000);
+		//edit credential
+		String newCredentialUsername="DFjkdfkgf"; String newCredentialPassword="adnjefjs";
+		testHelper.editCredentials(driver,URL,credentialUsername,credentialPassword,newCredentialUsername,newCredentialPassword);
+		driver.get("http://localhost:" + this.port + "/home");
+		Thread.sleep(2000);
+		testHelper.viewCredentials();
+		boolean isCredentialAvailable=testHelper.verifyCredentials(driver,URL,newCredentialUsername,newCredentialPassword);
+		Assertions.assertTrue(isCredentialAvailable);
+
+	}
+
+	@Test
+	public void deleteCredentials() throws InterruptedException
+	{
+		driver.get("http://localhost:" + this.port + "/signup");
+		String username = "machlieq";
+		String password = "kinareeq";
+		String firstName="Tarang";
+		String lastName="Talabpn";
+		testHelper.signup(firstName,lastName,username,password);
+		Thread.sleep(6000);
+		Thread.sleep(1200);
+		testHelper.fillLoginCredentials(username, password);
+		Thread.sleep(1200);
+		testHelper.attemptLogin();
+		Thread.sleep(1200);
+		String URL="https://www.needofhour.com";
+		String credentialUsername="xxxxx@needofhour.com";
+		String credentialPassword="yyyyyyyyyy";
+		testHelper.addNewCredential(URL,credentialUsername,credentialPassword);
+		driver.get("http://localhost:" + this.port + "/home");
+		Thread.sleep(2000);
+		testHelper.viewCredentials();
+		Thread.sleep(2000);
+		//verify that credential is displayed
+		boolean isCredentialAvailable=testHelper.verifyCredentials(driver,URL,credentialUsername,credentialPassword);
+		Assertions.assertTrue(isCredentialAvailable);
+
+		testHelper.deleteCredential(driver, URL,credentialUsername,credentialPassword);
+		boolean isCredentialAvailable2=testHelper.verifyCredentials(driver,URL,credentialUsername,credentialPassword);
+		Assertions.assertFalse(isCredentialAvailable2);
+
+	}
 
 }
